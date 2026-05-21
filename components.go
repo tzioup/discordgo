@@ -72,7 +72,7 @@ func (umc *unmarshalableMessageComponent) UnmarshalJSON(src []byte) error {
 	case ContainerComponent:
 		umc.MessageComponent = &Container{}
 	default:
-		return fmt.Errorf("unknown component type: %d", v.Type)
+		return nil
 	}
 	return json.Unmarshal(src, umc.MessageComponent)
 }
