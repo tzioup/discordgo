@@ -280,8 +280,10 @@ func (s *Session) RequestWithLockedBucket(method, urlStr, contentType string, b 
 		rl := TooManyRequests{}
 		err = Unmarshal(response, &rl)
 		if err != nil {
-			s.log(LogError, "rate limit unmarshal error, %s", err)
-			return
+			s.log(LogWarning, "rate limit unmarshal error, %s — using default 5s retry", err)
+			rl.RetryAfter = 5 * time.Second
+			rl.Message = "rate limited (non-JSON response)"
+			err = nil
 		}
 
 		if cfg.ShouldRetryOnRateLimit {
